@@ -3,209 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Net Sheet Calculator</title>
+    <title>Seller Net Sheet Calculator - Empire Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
+            background-color: rgb(240, 240, 240);
+            padding: 20px;
             margin: 0;
+        }
+
+        .calculator-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #f0f2f5;
+            background: linear-gradient(to bottom right, #ffffff, #f1f1f1);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .calculator-wrapper {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 0 auto;
         }
 
-        .calculator-wrapper h3 {
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-            font-size: 24px;
-        }
-
-        .calculator-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .calculator-inputs, .calculator-output {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .form-section {
-            border: 1px solid #eee;
-            padding: 20px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-section h4 {
+            color: #2c3e50;
             margin: 0 0 15px 0;
-            color: #444;
             font-size: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 15px;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
+            margin-bottom: 15px;
         }
 
-        .form-group label {
-            font-weight: 600;
-            color: #555;
-            font-size: 14px;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        .form-group input {
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
             font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: rgb(175, 35, 43);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(175, 35, 43, 0.1);
         }
 
         .calculate-btn {
-            background: #007bff;
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: rgb(175, 35, 43);
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 5px;
             font-size: 16px;
-            margin-top: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 25px;
         }
 
         .calculate-btn:hover {
-            background: #0056b3;
+            background: rgb(145, 25, 33);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .result-section {
-            margin-top: 20px;
-            padding: 15px;
+            padding: 20px;
             background: #f8f9fa;
-            border-radius: 4px;
+            border-radius: 8px;
             display: none;
         }
 
-        .result-section:not(:empty) {
+        .result-section.visible {
             display: block;
         }
 
         .result-section h4 {
             margin: 0 0 15px 0;
-            color: #333;
+            color: #2c3e50;
             font-size: 18px;
         }
 
-        .result-section p {
-            margin: 8px 0;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
+        .output-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        .output-table tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .output-table td {
+            padding: 15px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .output-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .output-table td:nth-child(2) {
+            text-align: right;
+            font-weight: 600;
+            color: #2c3e50;
         }
 
         .net-proceeds {
             font-weight: bold;
-            color: #28a745;
+            color: rgb(175, 35, 43);
             font-size: 20px;
-            border-bottom: none !important;
             padding: 15px;
             background: #e8f5e9;
             border-radius: 4px;
             text-align: center;
         }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .output-button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background-color: rgb(175, 35, 43);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .output-button:hover {
+            background-color: rgb(145, 30, 38);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
     </style>
 </head>
 <body>
-    <div class="calculator-wrapper">
-        <h3>Seller Net Sheet Calculator</h3>
-        <form id="seller-net-sheet" class="calculator-form">
-            <!-- Property Information Section -->
-            <div class="form-section">
-                <h4>Property Information</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="sale_price">Sale Price ($)</label>
-                        <input type="number" id="sale_price" name="sale_price" required>
+    <div class="calculator-container">
+        <div class="calculator-grid">
+            <!-- Left Column: Inputs -->
+            <div class="calculator-inputs">
+                <form id="seller-net-sheet" class="calculator-form">
+                    <!-- Property Information Section -->
+                    <div class="form-section">
+                        <h4>Property Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sale_price">Sale Price ($)</label>
+                                <input type="number" id="sale_price" name="sale_price" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="existing_mortgage">Existing Mortgage Balance ($)</label>
+                                <input type="number" id="existing_mortgage" name="existing_mortgage" required>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="existing_mortgage">Existing Mortgage Balance ($)</label>
-                        <input type="number" id="existing_mortgage" name="existing_mortgage" required>
+
+                    <!-- Commission and Fees Section -->
+                    <div class="form-section">
+                        <h4>Commission and Fees</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="commission_rate">Commission Rate (%)</label>
+                                <input type="number" id="commission_rate" name="commission_rate" step="0.1" value="6" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="property_taxes">Property Taxes ($)</label>
+                                <input type="number" id="property_taxes" name="property_taxes" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="title_fees">Title Insurance & Fees ($)</label>
+                                <input type="number" id="title_fees" name="title_fees" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="other_fees">Other Closing Costs ($)</label>
+                                <input type="number" id="other_fees" name="other_fees" required>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Agent Information Section -->
+                    <div class="form-section">
+                        <h4>Agent Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="agent_name">Agent Name</label>
+                                <input type="text" id="agent_name" name="agent_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="agent_email">Agent Email</label>
+                                <input type="email" id="agent_email" name="agent_email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="agent_phone">Agent Phone</label>
+                                <input type="tel" id="agent_phone" name="agent_phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="company_name">Company Name</label>
+                                <input type="text" id="company_name" name="company_name">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="calculate-btn" onclick="calculateSellerNet()">Calculate Net Proceeds</button>
+                </form>
             </div>
 
-            <!-- Commission and Fees Section -->
-            <div class="form-section">
-                <h4>Commission and Fees</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="commission_rate">Commission Rate (%)</label>
-                        <input type="number" id="commission_rate" name="commission_rate" step="0.1" value="6" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="property_taxes">Property Taxes ($)</label>
-                        <input type="number" id="property_taxes" name="property_taxes" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="title_fees">Title Insurance & Fees ($)</label>
-                        <input type="number" id="title_fees" name="title_fees" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="other_fees">Other Closing Costs ($)</label>
-                        <input type="number" id="other_fees" name="other_fees" required>
+            <!-- Right Column: Results -->
+            <div class="calculator-output">
+                <div id="seller-net-result" class="result-section">
+                    <h4>Results Summary</h4>
+                    <table class="output-table">
+                        <tr>
+                            <td>Sale Price</td>
+                            <td id="sale-price-output">$0</td>
+                        </tr>
+                        <tr>
+                            <td>Existing Mortgage</td>
+                            <td id="mortgage-output">$0</td>
+                        </tr>
+                        <tr>
+                            <td>Commission</td>
+                            <td id="commission-output">$0</td>
+                        </tr>
+                        <tr>
+                            <td>Property Taxes</td>
+                            <td id="taxes-output">$0</td>
+                        </tr>
+                        <tr>
+                            <td>Title Fees</td>
+                            <td id="title-output">$0</td>
+                        </tr>
+                        <tr>
+                            <td>Other Costs</td>
+                            <td id="other-output">$0</td>
+                        </tr>
+                        <tr>
+                            <td>Total Expenses</td>
+                            <td id="total-expenses-output">$0</td>
+                        </tr>
+                        <tr class="net-proceeds">
+                            <td>Estimated Net Proceeds</td>
+                            <td id="net-proceeds-output">$0</td>
+                        </tr>
+                    </table>
+                    <div class="button-group">
+                        <button class="output-button" onclick="generatePDF()">Download PDF</button>
+                        <button class="output-button" onclick="showEmailModal()">Email Results</button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Agent Information Section -->
-            <div class="form-section">
-                <h4>Agent Information</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agent_name">Agent Name</label>
-                        <input type="text" id="agent_name" name="agent_name">
-                    </div>
-                    <div class="form-group">
-                        <label for="agent_email">Agent Email</label>
-                        <input type="email" id="agent_email" name="agent_email">
-                    </div>
+    <!-- Email Modal -->
+    <div id="email-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideEmailModal()">&times;</span>
+            <h4>Send Results</h4>
+            <form id="email-form" onsubmit="sendEmail(event)">
+                <div class="form-group">
+                    <label for="recipient_name">Recipient Name</label>
+                    <input type="text" id="recipient_name" required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="agent_phone">Agent Phone</label>
-                        <input type="tel" id="agent_phone" name="agent_phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="company_name">Company Name</label>
-                        <input type="text" id="company_name" name="company_name">
-                    </div>
+                <div class="form-group">
+                    <label for="recipient_email">Recipient Email</label>
+                    <input type="email" id="recipient_email" required>
                 </div>
-            </div>
-            
-            <button type="button" class="calculate-btn" onclick="calculateSellerNet()">Calculate Net Proceeds</button>
-            
-            <div id="seller-net-result" class="result-section"></div>
-        </form>
+                <button type="submit" class="output-button">Send</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        console.log('Script loaded');
-        
+        // Initialize results section as hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultSection = document.getElementById('seller-net-result');
+            resultSection.style.display = 'none';
+        });
+
         function calculateSellerNet() {
-            console.log('Calculate function called');
-            
             // Get all input values
             const salePrice = parseFloat(document.getElementById('sale_price').value) || 0;
             const existingMortgage = parseFloat(document.getElementById('existing_mortgage').value) || 0;
@@ -223,30 +393,106 @@
             // Calculate costs
             const commission = salePrice * commissionRate;
             const totalClosingCosts = propertyTaxes + titleFees + otherFees;
-            const netProceeds = salePrice - existingMortgage - commission - totalClosingCosts;
+            const totalExpenses = existingMortgage + commission + totalClosingCosts;
+            const netProceeds = salePrice - totalExpenses;
 
-            console.log('Results:', { commission, totalClosingCosts, netProceeds });
+            // Update output fields
+            document.getElementById('sale-price-output').textContent = formatCurrency(salePrice);
+            document.getElementById('mortgage-output').textContent = formatCurrency(existingMortgage);
+            document.getElementById('commission-output').textContent = formatCurrency(commission);
+            document.getElementById('taxes-output').textContent = formatCurrency(propertyTaxes);
+            document.getElementById('title-output').textContent = formatCurrency(titleFees);
+            document.getElementById('other-output').textContent = formatCurrency(otherFees);
+            document.getElementById('total-expenses-output').textContent = formatCurrency(totalExpenses);
+            document.getElementById('net-proceeds-output').textContent = formatCurrency(netProceeds);
 
-            // Format the results
-            const resultHtml = `
-                <h4>Results Summary</h4>
-                <p>Sale Price: $${salePrice.toLocaleString()}</p>
-                <p>Existing Mortgage: $${existingMortgage.toLocaleString()}</p>
-                <p>Commission (${(commissionRate * 100).toFixed(1)}%): $${commission.toLocaleString()}</p>
-                <p>Property Taxes: $${propertyTaxes.toLocaleString()}</p>
-                <p>Title Fees: $${titleFees.toLocaleString()}</p>
-                <p>Other Closing Costs: $${otherFees.toLocaleString()}</p>
-                <p>Total Closing Costs: $${totalClosingCosts.toLocaleString()}</p>
-                <p class="net-proceeds">Estimated Net Proceeds: $${netProceeds.toLocaleString()}</p>
-            `;
-
-            document.getElementById('seller-net-result').innerHTML = resultHtml;
+            // Show results
+            document.getElementById('seller-net-result').style.display = 'block';
         }
 
-        // Log when the page is fully loaded
-        window.onload = function() {
-            console.log('Page fully loaded');
-        };
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add header
+            doc.setFontSize(20);
+            doc.text('Seller Net Sheet', 105, 20, { align: 'center' });
+            
+            // Add content
+            doc.setFontSize(12);
+            let y = 40;
+            const leftX = 20;
+            const rightX = 180;
+
+            // Add calculations
+            const items = [
+                ['Sale Price:', document.getElementById('sale-price-output').textContent],
+                ['Existing Mortgage:', document.getElementById('mortgage-output').textContent],
+                ['Commission:', document.getElementById('commission-output').textContent],
+                ['Property Taxes:', document.getElementById('taxes-output').textContent],
+                ['Title Fees:', document.getElementById('title-output').textContent],
+                ['Other Costs:', document.getElementById('other-output').textContent],
+                ['Total Expenses:', document.getElementById('total-expenses-output').textContent],
+                ['Net Proceeds:', document.getElementById('net-proceeds-output').textContent]
+            ];
+
+            items.forEach(([label, value]) => {
+                doc.text(label, leftX, y);
+                doc.text(value, rightX, y, { align: 'right' });
+                y += 10;
+            });
+
+            // Add agent information if provided
+            const agentName = document.getElementById('agent_name').value;
+            const agentEmail = document.getElementById('agent_email').value;
+            const agentPhone = document.getElementById('agent_phone').value;
+            const companyName = document.getElementById('company_name').value;
+
+            if (agentName || agentEmail || agentPhone || companyName) {
+                y += 20;
+                doc.text('Agent Information:', leftX, y);
+                y += 10;
+                if (agentName) doc.text(`Name: ${agentName}`, leftX, y);
+                if (agentEmail) doc.text(`Email: ${agentEmail}`, leftX, y += 10);
+                if (agentPhone) doc.text(`Phone: ${agentPhone}`, leftX, y += 10);
+                if (companyName) doc.text(`Company: ${companyName}`, leftX, y += 10);
+            }
+
+            // Add footer
+            y = doc.internal.pageSize.height - 30;
+            doc.setFontSize(10);
+            doc.text('Empire Title Services', 105, y, { align: 'center' });
+            doc.text('(765) 935-9966 | 123 Main Street, Richmond, IN 47374', 105, y + 10, { align: 'center' });
+
+            // Save the PDF
+            doc.save('seller-net-sheet.pdf');
+        }
+
+        function showEmailModal() {
+            document.getElementById('email-modal').classList.add('visible');
+        }
+
+        function hideEmailModal() {
+            document.getElementById('email-modal').classList.remove('visible');
+        }
+
+        function sendEmail(event) {
+            event.preventDefault();
+            const recipientName = document.getElementById('recipient_name').value;
+            const recipientEmail = document.getElementById('recipient_email').value;
+            
+            // Here you would typically make an API call to your server to send the email
+            alert(`Email would be sent to ${recipientName} at ${recipientEmail}`);
+            hideEmailModal();
+        }
     </script>
 </body>
 </html>
