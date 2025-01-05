@@ -1,122 +1,175 @@
-<!-- Add this right before the closing </body> tag -->
-<template id="pdf-template-1">
-    <div class="pdf-template-1">
-        <div class="header">
-            <h1>Seller Net Sheet</h1>
-            <p>{{date}}</p>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Net Sheet Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
 
-        <div class="company-info">
-            <img src="{{companyLogo}}" alt="Company Logo" class="logo">
-            <div class="contact">
-                <h3>{{agentName}}</h3>
-                <p>{{agentPhone}}</p>
-                <p>{{agentEmail}}</p>
+        .calculator-wrapper {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .calculator-wrapper h3 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .calculator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .calculate-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            background: #0056b3;
+        }
+
+        .result-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .result-section:not(:empty) {
+            display: block;
+        }
+
+        .result-section h4 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .result-section p {
+            margin: 8px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .net-proceeds {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 20px;
+            border-bottom: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-wrapper">
+        <h3>Seller Net Sheet Calculator</h3>
+        <form id="seller-net-sheet" class="calculator-form">
+            <div class="form-group">
+                <label for="sale_price">Sale Price ($)</label>
+                <input type="number" id="sale_price" name="sale_price" required>
             </div>
-        </div>
-
-        <table class="calculations">
-            <tr>
-                <td>Sale Price</td>
-                <td>{{salePrice}}</td>
-            </tr>
-            <tr>
-                <td>Mortgage Payoff</td>
-                <td>{{mortgagePayoff}}</td>
-            </tr>
-            <tr>
-                <td>Realtor Commission</td>
-                <td>{{realtorCommission}}</td>
-            </tr>
-            <tr>
-                <td>Real Estate Taxes</td>
-                <td>{{realEstateTaxes}}</td>
-            </tr>
-            <tr>
-                <td>Title Company Fees</td>
-                <td>{{titleCompanyFees}}</td>
-            </tr>
-            <tr>
-                <td>Additional Costs</td>
-                <td>{{additionalCosts}}</td>
-            </tr>
-            <tr class="total-row">
-                <td>Total Expenses</td>
-                <td>{{totalExpenses}}</td>
-            </tr>
-            <tr class="net-proceeds">
-                <td>Net to Seller</td>
-                <td>{{netProceeds}}</td>
-            </tr>
-        </table>
-
-        <div class="footer">
-            <p>Prepared for: {{clientName}}</p>
-            <p>This is an estimate of net proceeds and actual figures may vary.</p>
-            <p>© {{currentYear}} Empire Title Services. All rights reserved.</p>
-        </div>
-    </div>
-</template>
-
-<template id="pdf-template-2">
-    <div class="pdf-template-2">
-        <div class="header">
-            <h1>Seller Net Sheet Calculator</h1>
-            <p>Prepared on {{date}}</p>
-        </div>
-
-        <div class="company-info">
-            <img src="{{companyLogo}}" alt="Company Logo" class="logo">
-            <div class="agent-info">
-                {{#if isAgent}}
-                <div class="agent-details">
-                    <img src="{{agentImage}}" alt="Agent Photo" class="agent-photo">
-                    <h3>{{agentName}}</h3>
-                    <p>{{agentPhone}}</p>
-                </div>
-                {{/if}}
+            
+            <div class="form-group">
+                <label for="existing_mortgage">Existing Mortgage Balance ($)</label>
+                <input type="number" id="existing_mortgage" name="existing_mortgage" required>
             </div>
-        </div>
-
-        <table class="calculations">
-            <tr>
-                <td>Sale Price</td>
-                <td>{{salePrice}}</td>
-            </tr>
-            <tr>
-                <td>Mortgage Payoff</td>
-                <td>{{mortgagePayoff}}</td>
-            </tr>
-            <tr>
-                <td>Realtor Commission</td>
-                <td>{{realtorCommission}}</td>
-            </tr>
-            <tr>
-                <td>Real Estate Taxes</td>
-                <td>{{realEstateTaxes}}</td>
-            </tr>
-            <tr>
-                <td>Title Company Fees</td>
-                <td>{{titleCompanyFees}}</td>
-            </tr>
-            <tr>
-                <td>Additional Costs</td>
-                <td>{{additionalCosts}}</td>
-            </tr>
-            <tr class="total-row">
-                <td>Total Expenses</td>
-                <td>{{totalExpenses}}</td>
-            </tr>
-            <tr class="net-proceeds">
-                <td>Net to Seller</td>
-                <td>{{netProceeds}}</td>
-            </tr>
-        </table>
-
-        <div class="footer">
-            <p>Prepared for: {{clientName}}</p>
-            <p>This is an estimate of net proceeds and actual figures may vary.</p>
-            <p>© {{currentYear}} Empire Title Services. All rights reserved.</p>
-        </div>
+            
+            <div class="form-group">
+                <label for="commission_rate">Commission Rate (%)</label>
+                <input type="number" id="commission_rate" name="commission_rate" step="0.1" value="6" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="property_taxes">Property Taxes ($)</label>
+                <input type="number" id="property_taxes" name="property_taxes" required>
+            </div>
+            
+            <button type="button" class="calculate-btn" onclick="calculateSellerNet()">Calculate</button>
+            
+            <div id="seller-net-result" class="result-section"></div>
+        </form>
     </div>
-</template>
+
+    <script>
+        console.log('Script loaded');
+        
+        function calculateSellerNet() {
+            console.log('Calculate function called');
+            
+            const salePrice = parseFloat(document.getElementById('sale_price').value);
+            const existingMortgage = parseFloat(document.getElementById('existing_mortgage').value);
+            const commissionRate = parseFloat(document.getElementById('commission_rate').value) / 100;
+            const propertyTaxes = parseFloat(document.getElementById('property_taxes').value);
+
+            console.log('Values:', { salePrice, existingMortgage, commissionRate, propertyTaxes });
+
+            if ([salePrice, existingMortgage, commissionRate, propertyTaxes].some(isNaN)) {
+                alert('Please fill in all fields with valid numbers');
+                return;
+            }
+
+            const commission = salePrice * commissionRate;
+            const netProceeds = salePrice - existingMortgage - commission - propertyTaxes;
+
+            console.log('Results:', { commission, netProceeds });
+
+            const resultHtml = `
+                <h4>Results:</h4>
+                <p>Sale Price: $${salePrice.toLocaleString()}</p>
+                <p>Commission: $${commission.toLocaleString()}</p>
+                <p>Existing Mortgage: $${existingMortgage.toLocaleString()}</p>
+                <p>Property Taxes: $${propertyTaxes.toLocaleString()}</p>
+                <p class="net-proceeds">Estimated Net Proceeds: $${netProceeds.toLocaleString()}</p>
+            `;
+
+            document.getElementById('seller-net-result').innerHTML = resultHtml;
+        }
+
+        // Log when the page is fully loaded
+        window.onload = function() {
+            console.log('Page fully loaded');
+        };
+    </script>
+</body>
+</html>
