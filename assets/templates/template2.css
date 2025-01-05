@@ -1,0 +1,65 @@
+/* Template 2 - Modern Red */
+.pdf-template-2 {
+    font-family: 'Helvetica', sans-serif;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pdf-template-2 .header {
+    background: linear-gradient(to right, #af232b, #d63447);
+    color: white;
+    padding: 30px;
+    border-radius: 10px 10px 0 0;
+}
+
+.pdf-template-2 .company-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 30px;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.pdf-template-2 .logo {
+    max-width: 180px;
+    height: auto;
+}
+
+.pdf-template-2 .calculations {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin: 30px 0;
+}
+
+.pdf-template-2 .calculations td {
+    padding: 15px;
+    background: #f8f9fa;
+}
+
+.pdf-template-2 .calculations td:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: #af232b;
+}
+
+.pdf-template-2 .total-row {
+    background: #edf2f7;
+    font-size: 1.1em;
+}
+
+.pdf-template-2 .net-proceeds {
+    background: #af232b !important;
+    color: white;
+    font-size: 1.2em;
+}
+
+.pdf-template-2 .footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 0 0 10px 10px;
+}

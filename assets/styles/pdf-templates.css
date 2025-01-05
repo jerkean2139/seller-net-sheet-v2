@@ -1,0 +1,72 @@
+/* PDF Template Styles */
+.pdf-template {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    color: #333;
+}
+
+.template-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.template-header h1 {
+    color: #af232b;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.company-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.logo-container img {
+    max-width: 200px;
+    height: auto;
+}
+
+.agent-info {
+    text-align: right;
+}
+
+.calculations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+}
+
+.calculations-table th,
+.calculations-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.calculations-table td:last-child {
+    text-align: right;
+    font-weight: bold;
+}
+
+.total-row {
+    background: #f8f9fa;
+    font-weight: bold;
+}
+
+.net-proceeds {
+    background: #af232b;
+    color: white;
+}
+
+.template-footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+}

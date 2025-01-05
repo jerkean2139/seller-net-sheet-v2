@@ -1,0 +1,21 @@
+{
+  "name": "seller-net-sheet-calculator",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1",
+    "html2canvas": "^1.4.1",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "vite": "^5.0.8"
+  }
+}

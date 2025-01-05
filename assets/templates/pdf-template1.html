@@ -1,0 +1,56 @@
+<div class="pdf-template-1">
+    <div class="header">
+        <h1>Seller Net Sheet</h1>
+        <p>{{date}}</p>
+    </div>
+
+    <div class="company-info">
+        <img src="{{companyLogo}}" alt="Company Logo" class="logo">
+        <div class="contact">
+            <h3>{{agentName}}</h3>
+            <p>{{agentPhone}}</p>
+            <p>{{agentEmail}}</p>
+        </div>
+    </div>
+
+    <table class="calculations">
+        <tr>
+            <td>Sale Price</td>
+            <td>{{salePrice}}</td>
+        </tr>
+        <tr>
+            <td>Mortgage Payoff</td>
+            <td>{{mortgagePayoff}}</td>
+        </tr>
+        <tr>
+            <td>Realtor Commission</td>
+            <td>{{realtorCommission}}</td>
+        </tr>
+        <tr>
+            <td>Real Estate Taxes</td>
+            <td>{{realEstateTaxes}}</td>
+        </tr>
+        <tr>
+            <td>Title Company Fees</td>
+            <td>{{titleCompanyFees}}</td>
+        </tr>
+        <tr>
+            <td>Additional Costs</td>
+            <td>{{additionalCosts}}</td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Expenses</td>
+            <td>{{totalExpenses}}</td>
+        </tr>
+        <tr class="net-proceeds">
+            <td>Net to Seller</td>
+            <td>{{netProceeds}}</td>
+        </tr>
+    </table>
+
+    <div class="footer">
+        <p>Prepared for: {{clientName}}</p>
+        <p>This is an estimate of net proceeds and actual figures may vary.</p>
+        <p>© {{currentYear}} Empire Title Services. All rights reserved.</p>
+    </div>
+</div>
