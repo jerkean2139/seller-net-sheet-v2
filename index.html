@@ -14,7 +14,7 @@
         }
 
         .calculator-wrapper {
-            max-width: 600px;
+            max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             background: white;
@@ -35,10 +35,30 @@
             gap: 15px;
         }
 
+        .form-section {
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h4 {
+            margin: 0 0 15px 0;
+            color: #444;
+            font-size: 18px;
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
         .form-group label {
@@ -98,6 +118,10 @@
             color: #28a745;
             font-size: 20px;
             border-bottom: none !important;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 4px;
+            text-align: center;
         }
     </style>
 </head>
@@ -105,27 +129,72 @@
     <div class="calculator-wrapper">
         <h3>Seller Net Sheet Calculator</h3>
         <form id="seller-net-sheet" class="calculator-form">
-            <div class="form-group">
-                <label for="sale_price">Sale Price ($)</label>
-                <input type="number" id="sale_price" name="sale_price" required>
+            <!-- Property Information Section -->
+            <div class="form-section">
+                <h4>Property Information</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sale_price">Sale Price ($)</label>
+                        <input type="number" id="sale_price" name="sale_price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="existing_mortgage">Existing Mortgage Balance ($)</label>
+                        <input type="number" id="existing_mortgage" name="existing_mortgage" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commission and Fees Section -->
+            <div class="form-section">
+                <h4>Commission and Fees</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="commission_rate">Commission Rate (%)</label>
+                        <input type="number" id="commission_rate" name="commission_rate" step="0.1" value="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="property_taxes">Property Taxes ($)</label>
+                        <input type="number" id="property_taxes" name="property_taxes" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title_fees">Title Insurance & Fees ($)</label>
+                        <input type="number" id="title_fees" name="title_fees" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="other_fees">Other Closing Costs ($)</label>
+                        <input type="number" id="other_fees" name="other_fees" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Information Section -->
+            <div class="form-section">
+                <h4>Agent Information</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="agent_name">Agent Name</label>
+                        <input type="text" id="agent_name" name="agent_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="agent_email">Agent Email</label>
+                        <input type="email" id="agent_email" name="agent_email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="agent_phone">Agent Phone</label>
+                        <input type="tel" id="agent_phone" name="agent_phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="company_name">Company Name</label>
+                        <input type="text" id="company_name" name="company_name">
+                    </div>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="existing_mortgage">Existing Mortgage Balance ($)</label>
-                <input type="number" id="existing_mortgage" name="existing_mortgage" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="commission_rate">Commission Rate (%)</label>
-                <input type="number" id="commission_rate" name="commission_rate" step="0.1" value="6" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="property_taxes">Property Taxes ($)</label>
-                <input type="number" id="property_taxes" name="property_taxes" required>
-            </div>
-            
-            <button type="button" class="calculate-btn" onclick="calculateSellerNet()">Calculate</button>
+            <button type="button" class="calculate-btn" onclick="calculateSellerNet()">Calculate Net Proceeds</button>
             
             <div id="seller-net-result" class="result-section"></div>
         </form>
@@ -137,29 +206,37 @@
         function calculateSellerNet() {
             console.log('Calculate function called');
             
-            const salePrice = parseFloat(document.getElementById('sale_price').value);
-            const existingMortgage = parseFloat(document.getElementById('existing_mortgage').value);
-            const commissionRate = parseFloat(document.getElementById('commission_rate').value) / 100;
-            const propertyTaxes = parseFloat(document.getElementById('property_taxes').value);
+            // Get all input values
+            const salePrice = parseFloat(document.getElementById('sale_price').value) || 0;
+            const existingMortgage = parseFloat(document.getElementById('existing_mortgage').value) || 0;
+            const commissionRate = parseFloat(document.getElementById('commission_rate').value) / 100 || 0;
+            const propertyTaxes = parseFloat(document.getElementById('property_taxes').value) || 0;
+            const titleFees = parseFloat(document.getElementById('title_fees').value) || 0;
+            const otherFees = parseFloat(document.getElementById('other_fees').value) || 0;
 
-            console.log('Values:', { salePrice, existingMortgage, commissionRate, propertyTaxes });
-
-            if ([salePrice, existingMortgage, commissionRate, propertyTaxes].some(isNaN)) {
-                alert('Please fill in all fields with valid numbers');
+            // Validate required fields
+            if (!salePrice || !existingMortgage || !commissionRate) {
+                alert('Please fill in all required fields');
                 return;
             }
 
+            // Calculate costs
             const commission = salePrice * commissionRate;
-            const netProceeds = salePrice - existingMortgage - commission - propertyTaxes;
+            const totalClosingCosts = propertyTaxes + titleFees + otherFees;
+            const netProceeds = salePrice - existingMortgage - commission - totalClosingCosts;
 
-            console.log('Results:', { commission, netProceeds });
+            console.log('Results:', { commission, totalClosingCosts, netProceeds });
 
+            // Format the results
             const resultHtml = `
-                <h4>Results:</h4>
+                <h4>Results Summary</h4>
                 <p>Sale Price: $${salePrice.toLocaleString()}</p>
-                <p>Commission: $${commission.toLocaleString()}</p>
                 <p>Existing Mortgage: $${existingMortgage.toLocaleString()}</p>
+                <p>Commission (${(commissionRate * 100).toFixed(1)}%): $${commission.toLocaleString()}</p>
                 <p>Property Taxes: $${propertyTaxes.toLocaleString()}</p>
+                <p>Title Fees: $${titleFees.toLocaleString()}</p>
+                <p>Other Closing Costs: $${otherFees.toLocaleString()}</p>
+                <p>Total Closing Costs: $${totalClosingCosts.toLocaleString()}</p>
                 <p class="net-proceeds">Estimated Net Proceeds: $${netProceeds.toLocaleString()}</p>
             `;
 
