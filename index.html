@@ -1107,14 +1107,12 @@
                 }
 
                 // HEADER SECTION
-                try {
-                    const empireLogo = new Image();
-                    empireLogo.crossOrigin = "Anonymous";
-                    await new Promise((resolve, reject) => {
-                        empireLogo.onload = resolve;
-                        empireLogo.onerror = reject;
-                        empireLogo.src = 'assets/empire-logo.png';
-                    });
+try {
+    console.log('Adding Empire logo...');
+    pdf.addImage(empireLogo_base64, 'PNG', (pageWidth - 120) / 2, margin, 120, 60);
+} catch (logoError) {
+    console.warn('Could not load Empire logo:', logoError);
+};
                     
                     const logoWidth = 120;
                     const logoHeight = (empireLogo.height * logoWidth) / empireLogo.width;
@@ -1187,13 +1185,17 @@
                 drawSection(footerY, 45);
 
                 // Add Missy's section in bottom right
-                try {
-                    const missyImage = new Image();
-                    missyImage.crossOrigin = "Anonymous";
-                    await new Promise((resolve, reject) => {
-                        missyImage.onload = resolve;
-                        missyImage.onerror = reject;
-                        missyImage.src = 'assets/missy-photo.jpg';
+try {
+    console.log('Adding Missy photo...');
+    const missyWidth = 30;
+    const missyHeight = 30;
+    const missyX = pageWidth - margin - missyWidth - 5;
+    const missyY = footerY + 5;
+
+    // Add image with white background
+    pdf.setFillColor(255, 255, 255);
+    pdf.rect(missyX - 2, missyY - 2, missyWidth + 4, missyHeight + 4, 'F');
+    pdf.addImage(missyPhoto_base64, 'JPEG', missyX, missyY, missyWidth, missyHeight);
                     });
 
                     // Position Missy's section
